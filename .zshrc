@@ -83,6 +83,14 @@ source $ZSH/oh-my-zsh.sh
 
 eval "$(starship init zsh)"
 
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+    if tmux list-sessions &> /dev/null; then
+        tmux attach-session
+    else 
+        tmux new-session -s main
+    fi
+fi
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
