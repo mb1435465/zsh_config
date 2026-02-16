@@ -1,15 +1,19 @@
 #!/bin/bash
 
-SESSION=$(tmux display-message -p "#S")
+SESSION="mbrown's session"
 
-WINDOW_COUNT=$(tmux list-windows -t "$SESSION" | wc -l)
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+    tmux attach-session -t "$SESSION"
+else 
+    tmux new-session -d -s "$SESSION" -n 'main'
 
-if [ "$WINDOW_COUNT" -eq 1]; then
-    tmux rename-window -t "$SESSION:1" 'main'
-    tmux new-window -t "$SESSION:2" 'dev'
-    tmux new-window -t "$SESSION:3" 'git'
-    tmux new-window -t "$SESSION:4" 'monitoring'
-    tmux new-window -t "$SESSION:5" 'misc'
+    tmux new-window -a -t "$SESSION" -n 'nvim1'
+    tmux new-window -a -t "$SESSION" -n 'nvim2'
+    tmux new-window -a -t "$SESSION" -n 'run_commands'
+    tmux new-window -a -t "$SESSION" -n 'misc'
 
-    tmux select-window -t "$SESSION:1"
+    tmux select-window -t "$SESSION:main"
+    
+    tmux attach-session -t "$SESSION"
 fi 
+
